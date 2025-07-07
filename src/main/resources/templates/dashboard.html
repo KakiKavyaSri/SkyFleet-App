@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2c3e50;
+      --accent: #27ae60;
+      --bg: #f2f4f8;
+      --white: #ffffff;
+      --text: #2c3e50;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark-mode {
+      --bg: #121212;
+      --white: #1e1e1e;
+      --text: #e0e0e0;
+      --shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .navbar {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+
+    .navbar .right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      background-color: #ccc;
+      border-radius: 34px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: 0.3s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background-color: white;
+      left: 3px;
+      bottom: 3px;
+      transition: 0.3s;
+    }
+
+    input:checked + .slider {
+      background-color: #2ecc71;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h2.section-title {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--primary);
+      padding-left: 12px;
+      color: var(--primary);
+      font-size: 1.4em;
+    }
+
+    .stats, .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, background 0.3s;
+      text-align: center;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.05em;
+    }
+
+    .card strong {
+      font-size: 1.8em;
+      color: var(--accent);
+    }
+
+    .actions li {
+      list-style: none;
+    }
+
+    .actions a {
+      display: block;
+      background-color: var(--primary);
+      color: white;
+      padding: 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.25s ease;
+      font-weight: bold;
+      box-shadow: var(--shadow);
+    }
+
+    .actions a:hover {
+      background-color: #217dbb;
+    }
+
+    canvas {
+      margin-top: 50px;
+      padding: 20px;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .right {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <h1>✈️ Admin Dashboard</h1>
+  <div class="right">
+    <div th:if="${username}">Welcome, <span th:text="${username}"></span></div>
+    <div class="toggle-switch">
+      <label>
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2 class="section-title">📊 Key Stats</h2>
+  <div class="stats">
+    <div class="card"><h3>Total Flights</h3><strong th:text="${totalFlights}">0</strong></div>
+    <div class="card"><h3>Total Passengers</h3><strong th:text="${totalPassengers}">0</strong></div>
+    <div class="card"><h3>Total Bookings</h3><strong th:text="${totalBookings}">0</strong></div>
+    <div class="card"><h3>Paid Bookings</h3><strong th:text="${paidBookings}">0</strong></div>
+    <div class="card"><h3>Failed Bookings</h3><strong th:text="${failedBookings}">0</strong></div>
+    <div class="card"><h3>Success Rate</h3><strong th:text="${successRate}">0</strong>%</div>
+    <div class="card"><h3>Total Revenue (Dummy)</h3>₹<strong th:text="${totalRevenue}">0</strong></div>
+  </div>
+
+  <h2 class="section-title">🚀 Quick Actions</h2>
+  <div class="actions">
+    <li><a href="/book-flight">📅 Book a Flight</a></li>
+    <li><a href="/booking-history">📖 View Booking History</a></li>
+    <li><a href="/add-flight">➕ Add Flight</a></li>
+    <li><a href="/view-bookings">📖 View All Bookings</a></li>
+    <li><a href="/flights">✏️ View/Edit Flights</a></li>
+    <li><a href="/add-passenger">➕ Add Passenger</a></li>
+    <li><a href="/view-passengers">👥 View/Edit Passengers</a></li>
+    <li><a href="/logout">🚪 Logout</a></li>
+  </div>
+
+  <canvas id="dashboardChart" width="400" height="200"></canvas>
+</div>
+
+<script th:inline="javascript">
+  const chartData = {
+    labels: ['Flights', 'Passengers', 'Bookings', 'Revenue'],
+    datasets: [{
+      label: 'Dashboard Stats',
+      data: [
+        [[${totalFlights}]],
+        [[${totalPassengers}]],
+        [[${totalBookings}]],
+        [[${totalRevenue}]]
+      ],
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.6)',
+        'rgba(255, 206, 86, 0.6)',
+        'rgba(75, 192, 192, 0.6)',
+        'rgba(255, 99, 132, 0.6)'
+      ],
+      borderColor: [
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(255, 99, 132, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  const ctx = document.getElementById('dashboardChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: chartData,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Dark mode toggle logic
+  const toggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  // Load saved theme preference
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener('change', () => {
+    body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+  });
+</script>
+
+</body>
+</html>

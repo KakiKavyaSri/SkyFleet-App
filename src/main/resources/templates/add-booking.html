@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book a Flight</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #27ae60;
+            --bg: #f2f4f8;
+            --white: #ffffff;
+            --text: #2c3e50;
+            --border: #ccc;
+        }
+
+        body.dark-mode {
+            --bg: #121212;
+            --white: #1e1e1e;
+            --text: #f0f0f0;
+            --border: #555;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--white);
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #1d6fa5;
+        }
+
+        .success {
+            color: var(--accent);
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle label {
+            display: block;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-toggle label::before {
+            content: "🌞";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle input:checked + label::before {
+            transform: translateX(24px);
+            content: "🌙";
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <input type="checkbox" id="toggleTheme">
+    <label for="toggleTheme"></label>
+</div>
+
+<div class="container">
+    <p th:if="${param.success}" class="success">✅ Booking successful!</p>
+
+    <h2>✈️ Book a Flight</h2>
+
+    <form th:action="@{/add-booking}" th:object="${booking}" method="post">
+        <label>Passenger:</label>
+        <select th:field="*{passenger}">
+            <option th:each="passenger : ${passengers}"
+                    th:value="${passenger}"
+                    th:text="${passenger.name}">Passenger</option>
+        </select>
+
+        <label>Flight:</label>
+        <select th:field="*{flight}">
+            <option th:each="flight : ${flights}"
+                    th:value="${flight}"
+                    th:text="${flight.flightNumber}">Flight</option>
+        </select>
+
+        <button type="submit">🎟️ Book Flight</button>
+    </form>
+
+    <a class="back-link" href="/bookings">🔙 View All Bookings</a>
+</div>
+
+<script>
+    const toggle = document.getElementById('toggleTheme');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>

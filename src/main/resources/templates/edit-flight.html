@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Flight</title>
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --text: #2c3e50;
+            --card: #ffffff;
+            --accent: #3498db;
+            --input: #ecf0f1;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body.dark-mode {
+            --bg: #121212;
+            --text: #e0e0e0;
+            --card: #1f1f1f;
+            --input: #2a2a2a;
+            --shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px;
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--accent);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="hidden"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--input);
+            color: var(--text);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle label {
+            display: block;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-toggle label::before {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle input:checked + label::before {
+            transform: translateX(24px);
+        }
+
+        .theme-toggle input:checked + label {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <input type="checkbox" id="themeToggle">
+    <label for="themeToggle"></label>
+</div>
+
+<div class="container">
+    <h2>Edit Flight ✏️</h2>
+
+    <form th:action="@{/update-flight}" th:object="${flight}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        
+        <label>Flight Number:</label>
+        <input type="text" th:field="*{flightNumber}" />
+
+        <label>Airline:</label>
+        <input type="text" th:field="*{airline}" />
+
+        <label>Source:</label>
+        <input type="text" th:field="*{source}" />
+
+        <label>Destination:</label>
+        <input type="text" th:field="*{destination}" />
+
+        <label>Departure Time:</label>
+        <input type="text" th:field="*{departureTime}" />
+
+        <label>Arrival Time:</label>
+        <input type="text" th:field="*{arrivalTime}" />
+
+        <button type="submit">Update Flight</button>
+    </form>
+
+    <a href="/flights">← Back to All Flights</a>
+</div>
+
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Load saved preference
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>

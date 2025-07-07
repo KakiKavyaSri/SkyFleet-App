@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Bookings - SkyFleet</title>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --text: #333;
+            --card-bg: #ffffff;
+            --accent: #1976d2;
+            --table-border: #ccc;
+            --btn-bg: #1976d2;
+            --btn-hover: #125ea5;
+            --btn-text: white;
+        }
+
+        body.dark-mode {
+            --bg: #1c1c1c;
+            --text: #f0f0f0;
+            --card-bg: #2a2a2a;
+            --accent: #64b5f6;
+            --table-border: #444;
+            --btn-bg: #64b5f6;
+            --btn-hover: #42a5f5;
+            --btn-text: #1c1c1c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        h2 {
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle label {
+            display: block;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-toggle label::before {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle input:checked + label::before {
+            transform: translateX(24px);
+        }
+
+        .theme-toggle input:checked + label {
+            background-color: #4caf50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            border: 1px solid var(--table-border);
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .footer-link {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <input type="checkbox" id="themeToggle">
+    <label for="themeToggle"></label>
+</div>
+
+<h2>📋 Booking List</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Passenger</th>
+        <th>Flight</th>
+        <th>Status</th>
+        <th>Payment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="booking : ${bookings}">
+        <td th:text="${booking.id}"></td>
+        <td th:text="${booking.passenger.name}"></td>
+        <td th:text="${booking.flight.flightNumber}"></td>
+        <td th:text="${booking.status}"></td>
+        <td th:text="${booking.paymentStatus}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="footer-link">
+    <a href="/add-booking">← Book another flight</a>
+</div>
+
+<script>
+    const toggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>

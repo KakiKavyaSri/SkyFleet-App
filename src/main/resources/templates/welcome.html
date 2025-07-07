@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome | Sky Fleet</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --light-bg: linear-gradient(to right, #74ebd5, #acb6e5);
+            --dark-bg: linear-gradient(to right, #1f1f1f, #3b3b3b);
+            --text-color: #fff;
+            --primary-color: #ffffff;
+            --button-color: #2196f3;
+            --button-hover: #1976d2;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: var(--light-bg);
+            color: var(--text-color);
+            text-align: center;
+            transition: all 0.4s ease-in-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #f2f2f2;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        a.button {
+            background-color: var(--button-color);
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a.button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle label {
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+            background-color: #ddd;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-toggle label::before {
+            content: "🌞";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle input:checked + label::before {
+            transform: translateX(24px);
+            content: "🌙";
+        }
+
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <input type="checkbox" id="toggleTheme">
+    <label for="toggleTheme"></label>
+</div>
+
+<h1>🛫 Welcome to Sky Fleet</h1>
+<p class="subtitle">Your Smart Flight Management System</p>
+
+<div class="buttons">
+    <a class="button" th:href="@{/signup}">📝 Sign Up</a>
+    <a class="button" th:href="@{/signin}">🔐 Sign In</a>
+</div>
+
+<script>
+    const toggle = document.getElementById('toggleTheme');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>

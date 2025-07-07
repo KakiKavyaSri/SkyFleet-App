@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking History</title>
+    <style>
+        :root {
+            --primary: #34495e;
+            --accent: #27ae60;
+            --light: #f4f6f9;
+            --white: #ffffff;
+            --gray: #bdc3c7;
+            --highlight: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 40px;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--highlight);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 180px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #1e8449;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background-color: var(--highlight);
+            color: white;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--light);
+        }
+
+        tr:hover {
+            background-color: #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📖 Booking History</h2>
+
+    <form method="get" action="/booking-history">
+        <div>
+            <label>Username:</label><br>
+            <input type="text" name="username" placeholder="e.g. John" />
+        </div>
+        <div>
+            <label>From:</label><br>
+            <input type="date" name="from" />
+        </div>
+        <div>
+            <label>To:</label><br>
+            <input type="date" name="to" />
+        </div>
+        <div style="align-self: end;">
+            <button type="submit">🔍 Search</button>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Passenger</th>
+                <th>Flight</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="booking : ${bookings}">
+                <td th:text="${booking.id}"></td>
+                <td th:text="${booking.passenger.name}"></td>
+                <td th:text="${booking.flight.flightNumber}"></td>
+                <td th:text="${booking.status}"></td>
+                <td th:text="${booking.paymentStatus}"></td>
+                <td th:text="${booking.date}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

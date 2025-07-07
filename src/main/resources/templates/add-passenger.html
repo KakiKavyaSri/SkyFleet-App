@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Passenger</title>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --primary: #1f618d;
+            --accent: #27ae60;
+            --light: #f4f6f9;
+            --dark: #2c3e50;
+            --error: #e74c3c;
+            --white: #ffffff;
+            --text: var(--dark);
+            --bg: var(--light);
+            --input-border: #ccc;
+        }
+
+        body.dark-mode {
+            --bg: #121212;
+            --white: #1e1e1e;
+            --text: #f0f0f0;
+            --input-border: #555;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 40px;
+            margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            background-color: var(--white);
+            color: var(--text);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #154360;
+        }
+
+        .success {
+            color: var(--accent);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle label {
+            display: block;
+            width: 50px;
+            height: 26px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-toggle label::before {
+            content: "🌞";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle input:checked + label::before {
+            transform: translateX(24px);
+            content: "🌙";
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <input type="checkbox" id="toggleTheme">
+    <label for="toggleTheme"></label>
+</div>
+
+<div class="container">
+    <h2>👤 Add New Passenger</h2>
+
+    <form th:action="@{/add-passenger}" th:object="${passenger}" method="post">
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" />
+
+        <label>Phone:</label>
+        <input type="text" th:field="*{phone}" />
+
+        <button type="submit">➕ Add Passenger</button>
+    </form>
+
+    <p th:if="${param.success}" class="success">✅ Passenger added successfully!</p>
+
+    <a href="/passengers" class="back-link">👥 View All Passengers</a>
+</div>
+
+<script>
+    const toggle = document.getElementById('toggleTheme');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+</script>
+
+</body>
+</html>
