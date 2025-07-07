@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN sh mvnw clean package -DskipTests
 
 # Expose port 8080 (Spring Boot default)
 EXPOSE 8080
